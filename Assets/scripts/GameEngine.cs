@@ -8,6 +8,7 @@ public class GameEngine : MonoBehaviour
     // Start is called before the first frame update
     public string countdownFormat = "Time remaining: {0:00}:{1:00}";
     private float startTime;
+    public bool debug;
     bool started=false;
     bool gameover=false;
     public GameObject winningdisplay;
@@ -23,46 +24,48 @@ public class GameEngine : MonoBehaviour
     {
         if (Gamestat.gamestart)
         {
-            if (!started)
+            if (!debug)
             {
-                startTime = Time.time;
-                started = true;
-            }
-            float timeRemaining = Gamestat.gametime - (Time.time - startTime);
-            TMP_Text[] j = GameObject.Find("Canvas"). GetComponent<Canvas>().GetComponentsInChildren<TMP_Text>();
-            j[0].text = string.Format(countdownFormat, Mathf.FloorToInt(timeRemaining / 60), Mathf.FloorToInt(timeRemaining % 60));
-            j[1].text = Gamestat.playerscore.ToString() +"/"+Gamestat.numberofcoin;
-            j[2].text = Gamestat.chaserscore.ToString() + "/" + Gamestat.numberofcoin;
-            j[3].text = Gamestat.save.ToString();
-            j[4].text=  Gamestat.freeze.ToString();
-
-            if (!lose)
-            {
-                if (Gamestat.chaserscore > Gamestat.numberofcoin / 2)
+                if (!started)
                 {
-                    Instantiate(losedisplay, GameObject.Find("Canvas").transform);
-                    Time.timeScale = 0;
-                    lose=true;
+                    startTime = Time.time;
+                    started = true;
                 }
-                if (GameObject.Find("Player").transform.GetChild(0).tag == "chaster")
+                float timeRemaining = Gamestat.gametime - (Time.time - startTime);
+                TMP_Text[] j = GameObject.Find("Canvas").GetComponent<Canvas>().GetComponentsInChildren<TMP_Text>();
+                j[0].text = string.Format(countdownFormat, Mathf.FloorToInt(timeRemaining / 60), Mathf.FloorToInt(timeRemaining % 60));
+                j[1].text = Gamestat.playerscore.ToString() + "/" + Gamestat.numberofcoin;
+                j[2].text = Gamestat.chaserscore.ToString() + "/" + Gamestat.numberofcoin;
+                j[3].text = Gamestat.save.ToString();
+                j[4].text = Gamestat.freeze.ToString();
+
+                if (!lose)
                 {
-                    Instantiate(losedisplay, GameObject.Find("Canvas").transform);
-                    Time.timeScale = 0;
-                    lose = true;
+                    if (Gamestat.chaserscore > Gamestat.numberofcoin / 2)
+                    {
+                        Instantiate(losedisplay, GameObject.Find("Canvas").transform);
+                        Time.timeScale = 0;
+                        lose = true;
+                    }
+                    if (GameObject.Find("Player").transform.GetChild(0).tag == "chaster")
+                    {
+                        Instantiate(losedisplay, GameObject.Find("Canvas").transform);
+                        Time.timeScale = 0;
+                        lose = true;
+                    }
                 }
+
+                if (timeRemaining < 0 && !gameover)
+                {
+                    gameover = true;
+                    playerwin();
+                    Time.timeScale = 0;
+                }
+
+
+
             }
-
-            if (timeRemaining < 0&&!gameover)
-            {
-                gameover = true;
-                playerwin();
-                Time.timeScale = 0;
-            }
-
-
-
         }
-        
     }
     public void playerwin()
     {

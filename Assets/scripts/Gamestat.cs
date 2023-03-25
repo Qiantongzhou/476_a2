@@ -6,8 +6,8 @@ public static class Gamestat
 {
     public static bool gamestart=false;
     public static List<freezedplayer> freezedplayers = new List<freezedplayer>();
-    public static int numberofevaders=10;
-    public static int numberofchasers=1;
+    public static int numberofevaders=0;
+    public static int numberofchasers=0;
     public static bool coingen=false;
     public static float gametime = 300;
     public static int numberofcoin=10;

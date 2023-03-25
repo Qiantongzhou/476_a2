@@ -24,7 +24,7 @@ public class UIbutton : MonoBehaviour
         Gamestat.numberofcoin = 10;
         Gamestat.gametime = 300;
         Gamestat.freeze = 0;
-        Gamestat.numberofevaders = 10;
-        Gamestat.numberofchasers = 1;
+        Gamestat.numberofevaders = 0;
+        Gamestat.numberofchasers = 0;
     }
 }

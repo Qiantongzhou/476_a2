@@ -1,66 +1,82 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public class Maze: MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject[] blocks;
-    public int planeoffset;
-    List<GameObject> mazeList = new List<GameObject>();
+    public static int planeoffset=10;
+    public List<GameObject> mazeList = new List<GameObject>();
     GenericMaze<stringmazeobj> maze;
     [HideInInspector]
     public Astarsearch Astarsearch;
+    private List<NavMeshSurface> navMeshSurfaces= new List<NavMeshSurface>();
 
     public static int[,] mazegen ={ 
        //1,2,3,4,5,6,7,8,9,
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1},
-        {1,0,0,0,1,0,1,0,1,0,1,1,1,0,0,0,1},
-        {1,0,0,0,0,0,1,0,0,0,0,0,1,1,1,0,1},
-        {1,1,0,1,1,0,1,1,1,1,1,0,0,0,0,0,1},
-        {1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1},
-        {1,0,0,0,1,0,0,0,0,0,1,0,1,1,1,1,1},
-        {0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0},
-        {1,1,1,1,1,0,1,0,1,1,1,1,1,0,0,0,1},
-        {1,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,1},
-        {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1},
-        {1,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1},
-        {1,0,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1},
-        {1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-        {1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    };
+        {2 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,6 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,3},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,2 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,0 ,2 ,3 ,8},
+        {8, 0 ,0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,5 ,4 ,8},
+        {8, 0 ,0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,5 ,7 ,7 ,7 ,7 ,7 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,7 ,7 ,7 ,3 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,0 ,8 ,0 ,0 ,0 ,8},
+        {13,7 ,7 ,7 ,7 ,9 ,7 ,7 ,7 ,7 ,9 ,7 ,7 ,7 ,7 ,9 ,7 ,7 ,7 ,14,0 ,0 ,5 ,7 ,7 ,7 ,14},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,1 ,0 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,8 ,0 ,17,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,1 ,0 ,1 ,1 ,0 ,8},
+        {8, 0 ,0 ,0 ,1 ,0 ,0 ,0 ,1 ,0 ,0 ,1 ,1 ,1 ,0 ,0 ,0 ,1 ,0 ,8 ,0 ,1 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,1 ,0 ,0 ,0 ,8 ,0 ,1 ,0 ,16,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,1 ,1 ,1 ,1 ,1 ,8},
+        {8, 0 ,2 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,1 ,0 ,8 ,0 ,0 ,1 ,0 ,0 ,1 ,8},
+        {8, 0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,1 ,0 ,17,15,0 ,8},
+        {8, 0 ,5 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,3 ,0 ,0 ,0 ,1 ,1 ,0 ,0 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {13,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,6 ,7 ,4 ,0 ,3 ,7 ,7 ,9 ,7 ,7 ,7 ,14},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {8, 0 ,1 ,0 ,1 ,1 ,0 ,1 ,1 ,1 ,0 ,0 ,0 ,1 ,0 ,0 ,1 ,0 ,0 ,8 ,0 ,1 ,1 ,1 ,1 ,1 ,8},
+        {8, 0 ,1 ,0 ,1 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,1 ,1 ,0 ,1 ,1 ,1 ,0 ,8 ,0 ,0 ,1 ,0 ,0 ,0 ,8},
+        {8, 0 ,1 ,0 ,0 ,0 ,1 ,0 ,0 ,0 ,0 ,1 ,1 ,1 ,0 ,0 ,1 ,0 ,0 ,8 ,0 ,0 ,1 ,0 ,1 ,1 ,8},
+        {8, 0 ,1 ,1 ,1 ,1 ,1 ,1 ,0 ,1 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,0 ,8},
+        {8, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,8},
+        {5, 7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,7 ,4}
+    };              
 
 
     private TextMesh[,] debugtextarray = new TextMesh[mazegen.GetLength(0), mazegen.GetLength(1)];
     private void Start()
     {
-
+        //genmaze();
 
         // maze = new GenericMaze<stringmazeobj>(mazegen.GetLength(0), mazegen.GetLength(1), planeoffset, (GenericMaze<stringmazeobj> TM, int x, int y) => new stringmazeobj(TM, x, y));
-        Astarsearch = new Astarsearch(Maze.mazegen.GetLength(0), Maze.mazegen.GetLength(1));
+        //Astarsearch = new Astarsearch(Maze.mazegen.GetLength(0), Maze.mazegen.GetLength(1));
 
 
-        for (int i = 0; i < Maze.mazegen.GetLength(0); i++)
-        {
-            for (int j = 0; j < Maze.mazegen.GetLength(1); j++)
-            {
+        //for (int i = 0; i < Maze.mazegen.GetLength(0); i++)
+        //{
+        //    for (int j = 0; j < Maze.mazegen.GetLength(1); j++)
+        //    {
 
-                if (Maze.mazegen[i, j] == 0)
-                {
-                    Astarsearch.maze.GetValue(i, j).iswalkable = true;
+        //        if (Maze.mazegen[i, j] == 0)
+        //        {
+        //            Astarsearch.maze.GetValue(i, j).iswalkable = true;
 
-                }
-                else
-                if (Maze.mazegen[i, j] == 1)
-                {
-                    Astarsearch.maze.GetValue(i, j).iswalkable = false;
-                    Astarsearch.maze.GetValue(i, j).changecolor("green");
-                }
-            }
-        }
+        //        }
+        //        else
+        //        if (Maze.mazegen[i, j] == 1)
+        //        {
+        //            Astarsearch.maze.GetValue(i, j).iswalkable = false;
+        //            Astarsearch.maze.GetValue(i, j).changecolor("green");
+        //        }
+        //    }
+        //}
     }
     private void Update()
     {
@@ -77,34 +93,41 @@ public class Maze: MonoBehaviour
     public void genmaze()
     {
         
+        
         for (int i = 0; i < mazegen.GetLength(0); i++)
         {
             for (int j = 0; j < mazegen.GetLength(1); j++)
             {
-                debugtextarray[i,j]= textmaze.CreateMazeText(mazegen[i, j].ToString(), transform, getWorldPosition(i, j), 20, Color.white, TextAnchor.MiddleCenter);
+                //debugtextarray[i,j]= textmaze.CreateMazeText(mazegen[i, j].ToString(), transform, getWorldPosition(i, j), 20, Color.white, TextAnchor.MiddleCenter);
                 Debug.DrawLine(getWorldPosition(i, j), getWorldPosition(i, j + 1), Color.white, 100f);
                 Debug.DrawLine(getWorldPosition(i, j), getWorldPosition(i + 1, j), Color.white, 100f);
-                if (mazegen[i, j] == 0)
+                for (int k = 0; k < blocks.Length; k++)
                 {
-                    GameObject temp = Instantiate(blocks[0], transform);
-
-                    temp.transform.position = new Vector3(i * planeoffset, 0, j * planeoffset);
-                    mazeList.Add(temp);
-                } else
-                if (mazegen[i, j] == 1)
-                {
-                    GameObject temp = Instantiate(blocks[1], transform);
-                    temp.transform.position = new Vector3(i * planeoffset, 0, j* planeoffset);
-                    mazeList.Add(temp);
+                    if (mazegen[i, j] == k)
+                    {
+                        GameObject temp = Instantiate(blocks[k], transform);
+                        temp.AddComponent<NavMeshSurface>();
+                        temp.transform.position = new Vector3(j * planeoffset, 0, (mazegen.GetLength(0)-1) * planeoffset - i * planeoffset);
+                        mazeList.Add(temp);
+                    }
                 }
+                
             }
         }
-        Debug.DrawLine(getWorldPosition(0, mazegen.GetLength(0)+1), getWorldPosition(mazegen.GetLength(0), mazegen.GetLength(1)), Color.white, 100f);
-        Debug.DrawLine(getWorldPosition(mazegen.GetLength(1)-1, 0), getWorldPosition(mazegen.GetLength(0), mazegen.GetLength(1)), Color.white, 100f);
+        Debug.DrawLine(getWorldPosition(0, mazegen.GetLength(1)), getWorldPosition(mazegen.GetLength(0), mazegen.GetLength(1)), Color.white, 100f);
+        Debug.DrawLine(getWorldPosition(mazegen.GetLength(0), 0), getWorldPosition(mazegen.GetLength(0), mazegen.GetLength(1)), Color.white, 100f);
+        
+            
+            navMeshSurfaces.Add(mazeList.Last().GetComponent<NavMeshSurface>());
+        
+        
+            navMeshSurfaces.Last().BuildNavMesh();
+        
+        GenerateNavMesh();
     }
     private Vector3 getWorldPosition(int x, int y)
     {
-        return new Vector3(y, 0, x) * planeoffset;
+        return new Vector3(y * planeoffset, 0, (mazegen.GetLength(0) - 1) * planeoffset - x * planeoffset) ;
     }
     [ContextMenu("remove-maze")]
     public void removemaze()
@@ -119,11 +142,18 @@ public class Maze: MonoBehaviour
             DestroyImmediate(temp.gameObject);
         }
     }
-
-    public void getXY(Vector3 worldPosition, out int x, out int y)
+    private void GenerateNavMesh()
     {
-        x = Mathf.FloorToInt((worldPosition.z+(planeoffset/2)) / planeoffset);
-        y = Mathf.FloorToInt((worldPosition.x+(planeoffset/2)) / planeoffset);
+        
+    }
+
+    
+
+    public static void getXY(Vector3 worldPosition, out int x, out int y)
+    {
+
+        x = Mathf.FloorToInt((worldPosition.x+(planeoffset/2)) / planeoffset);
+        y = Mathf.FloorToInt((worldPosition.z+(planeoffset/2)) / planeoffset);
     }
     public void SetValue(int x, int y, int value)
     {

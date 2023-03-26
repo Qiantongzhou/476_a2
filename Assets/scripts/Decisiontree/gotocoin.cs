@@ -14,6 +14,7 @@ namespace BehaviorTree
         }
         public override NodeState Evaluate()
         {
+            Debug.Log("gotocoin");
             GameObject coin = GameObject.Find("WarningBolt(Clone)");
             if (coin != null) {
                 transform.GetComponent<NavMeshAgent>().SetDestination(coin.transform.position);

@@ -13,7 +13,7 @@ public class coinbehaviour : MonoBehaviour
             Gamestat.chaserscore++;
             Destroy(gameObject.transform.parent.gameObject);
         }
-        else if(collision.collider.name == "player")
+        else if(collision.collider.name == "player" || collision.collider.name == "evader")
         {
             Gamestat.playerscore++;
             Destroy(gameObject.transform.parent.gameObject);

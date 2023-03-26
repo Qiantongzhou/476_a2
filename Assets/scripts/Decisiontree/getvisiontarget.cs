@@ -10,6 +10,7 @@ namespace BehaviorTree
     {
         private Transform _transform;
         private Animator _animator;
+        public bool none=true;
 
         public getvisiontarget(Transform transform)
         {
@@ -21,11 +22,16 @@ namespace BehaviorTree
         {
             while (true)
             {
-                Debug.Log($"{_transform.name} lose target");
-                ClearData("target");
-                _animator.SetBool("Walking", false);
-                _transform.GetComponent<NavMeshAgent>().SetDestination(_transform.position);
-                yield return new WaitForSeconds(10f);
+                object t = GetData("target");
+                if (t != null)
+                {
+                    Debug.Log($"{_transform.name} lose target");
+                    ClearData("target");
+                    _animator.SetBool("Walking", false);
+                    none = true;
+                    _transform.GetComponent<NavMeshAgent>().SetDestination(_transform.position);
+                }
+                yield return new WaitForSeconds(UnityEngine.Random.value*5f+5f);
             }
         }
         public override NodeState Evaluate()
@@ -36,7 +42,7 @@ namespace BehaviorTree
                 List<Transform> targets=_transform.GetComponent<Vision>().targets;
                 
                 if (targets.Count > 0)
-                {
+                {   none=false;
                     parent.parent.SetData("target", targets[0].transform);
                     //_animator.SetBool("Walking", true);
                     Debug.Log($"{_transform.name} get {targets[0].transform}");

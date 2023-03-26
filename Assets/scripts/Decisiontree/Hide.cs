@@ -12,7 +12,7 @@ using UnityEngine.AI;
         public Transform transform;
         public float HideSensitivity = 0;
         private Collider[] Colliders = new Collider[10];
-        public float MinEnenydistance = 5f;
+        public float MinEnenydistance = 15f;
         public Transform Player;
 
         public Hide(Transform transform,LayerMask layer,float s)
@@ -55,9 +55,9 @@ using UnityEngine.AI;
                         if(Vector3.Dot(hit.normal,(Target.position-hit.position).normalized)<HideSensitivity)
                         {
                         
-                             if (Vector3.Distance(transform.position, hit.position) > 1f)
+                             if (Vector3.Distance(transform.position, hit.position) > 2f)
                              {
-                        Debug.Log($"hide hit1:{Vector3.Distance(transform.position, hit.position)}");
+                        //Debug.Log($"hide hit1:{Vector3.Distance(transform.position, hit.position)}");
                         transform.GetComponent<Animator>().SetBool("Walking", true);
                         Agent.SetDestination(hit.position);
                              }
@@ -85,10 +85,10 @@ using UnityEngine.AI;
                                 if (Vector3.Dot(hit2.normal, (Target.position - hit2.position).normalized) < HideSensitivity)
                                 {
                                 
-                            if (Vector3.Distance(transform.position, hit2.position) > 1f)
+                            if (Vector3.Distance(transform.position, hit2.position) > 2f)
                             {
                                 transform.GetComponent<Animator>().SetBool("Walking", true);
-                                Debug.Log($"hide hit1:{Vector3.Distance(transform.position, hit2.position)}");
+                                //Debug.Log($"hide hit1:{Vector3.Distance(transform.position, hit2.position)}");
                                 Agent.SetDestination(hit2.position);
                             }
                             else

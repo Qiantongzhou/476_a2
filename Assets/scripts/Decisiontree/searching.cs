@@ -46,9 +46,8 @@ namespace BehaviorTree
             while (true)
             {
                
-                yield return new WaitForSeconds(20f);
-                _waitCounter = 0f;
-                _waiting = true;
+                yield return new WaitForSeconds(UnityEngine.Random.value * 10f + 15f);
+               
                 _setdestination = true;
                 while (true)
                 {
@@ -61,19 +60,21 @@ namespace BehaviorTree
                     }
                     
                 }
-                Debug.Log("reset new waypoint");
+                Debug.Log($"reset new waypoint{_waypoints}");
 
-                _animator.SetBool("Walking", false);
+                //_animator.SetBool("Walking", true);
             }
         }
 
         public override NodeState Evaluate()
         {
+            Debug.Log("searching");
             if (_waiting)
             {
                 _waitCounter += Time.deltaTime;
                 if (_waitCounter >= _waitTime)
                 {
+                    _setdestination = true;
                     _waiting = false;
                     _animator.SetBool("Walking", true);
                 }
@@ -97,7 +98,7 @@ namespace BehaviorTree
                             _waypoints = new Vector3(x * 10, 0, y * 10);
                             break;
                         }
-                        Debug.Log("new waypoint");
+                        Debug.Log($"new waypoint{_waypoints}");
                     }
                     
                     
@@ -110,7 +111,8 @@ namespace BehaviorTree
                     {
                         Debug.Log("go to point");
                         _transform.GetComponent<NavMeshAgent>().destination = _waypoints;
-                        _setdestination= false;
+                        _animator.SetBool("Walking", true);
+                        _setdestination = false;
                     }
                 }
             }

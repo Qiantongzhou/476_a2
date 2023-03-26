@@ -1,28 +1,39 @@
 using System.Collections.Generic;
 using BehaviorTree;
-
-public class ChaserAI : Tree
+using UnityEngine;
+namespace BehaviorTree
 {
-    
-
-    public static float speed = 2f;
-    public static float fovRange = 6f;
-    public static float attackRange = 1f;
-
-    protected override Node SetupTree()
+    public class ChaserAI : Tree
     {
-        Node root = new Selector(new List<Node>
+
+        public LayerMask chaseLayers;
+        [Range(-1, 1)]
+        public float chasesentivity;
+        public bool useprediction = true;
+       
+        public Node root;
+
+        protected override Node SetupTree()
+        {
+            root = new Selector(new List<Node>
         {
             new Sequence(new List<Node>
             {
                 new getvisiontarget(transform),
-                new chase(transform)
+                //new checkotherchaser(transform,chaseLayers,chasesentivity),
+                new chase(transform,useprediction)
+            }),
+            new Sequence(new List<Node>
+            {
+                new sharedinfo(transform),
+                new chase(transform,useprediction)
             }),
             new gotocoin(transform),
             new searching(transform)
-        }) ;
+        }); 
 
-        return root;
+            return root;
+        }
     }
-}
 
+}

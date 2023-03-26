@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace BehaviorTree
-{
+
     public class Hide : Node
     {
         public LayerMask HidableLayers;
         public NavMeshAgent Agent;
-        private Transform transform;
+        public Transform transform;
         public float HideSensitivity = 0;
         private Collider[] Colliders = new Collider[10];
+        public float MinEnenydistance = 5f;
+        public Transform Player;
 
         public Hide(Transform transform,LayerMask layer,float s)
         {
@@ -24,12 +25,27 @@ namespace BehaviorTree
 
         public override NodeState Evaluate()
         {
+            for(int i=0; i< Colliders.Length; i++)
+            {
+                Colliders[i] = null;
+            }
             Transform Target = (Transform)GetData("target");
+            Player = Target;
             int hits = Physics.OverlapSphereNonAlloc(Agent.transform.position, transform.GetComponent<Vision>().viewRadius, Colliders, HidableLayers);
-
+            int hitReduction = 0;
+            for(int i=0; i< hits; i++)
+            {
+                if (Vector3.Distance(Colliders[i].transform.position, Target.position) < MinEnenydistance)
+                {
+                    Colliders[i] = null;
+                    hitReduction++;
+                }
+            }
+            hits -= hitReduction;
+            System.Array.Sort(Colliders, SortCollider);
                 for(int i = 0 ; i < hits; i++)
                 {
-                    if (NavMesh.SamplePosition(Colliders[i].transform.position,out NavMeshHit hit, 2f, Agent.areaMask))
+                    if (NavMesh.SamplePosition(Colliders[i].transform.position,out NavMeshHit hit, 20f, Agent.areaMask))
                     {
                         if(!NavMesh.FindClosestEdge(hit.position,out hit,Agent.areaMask))
                         {
@@ -38,15 +54,28 @@ namespace BehaviorTree
 
                         if(Vector3.Dot(hit.normal,(Target.position-hit.position).normalized)<HideSensitivity)
                         {
-                        Debug.Log("hide hit1");
-                            Agent.SetDestination(hit.position);
+                        
+                             if (Vector3.Distance(transform.position, hit.position) > 1f)
+                             {
+                        Debug.Log($"hide hit1:{Vector3.Distance(transform.position, hit.position)}");
+                        transform.GetComponent<Animator>().SetBool("Walking", true);
+                        Agent.SetDestination(hit.position);
+                             }
+                             else
+                             {
+                        Debug.Log("stop");
+                        transform.GetComponent<Animator>().SetBool("Walking", false);
+                        state = NodeState.SUCCESS;
+                        return state;
+                    }
+                        //transform.GetComponent<SmoothAgentMovement>().HandleWaypoint(hit.position);
                         state = NodeState.RUNNING;
                         return state;
 
                         }
                         else
                         {
-                            if (NavMesh.SamplePosition(Colliders[i].transform.position-(Target.position-hit.position).normalized*2, out NavMeshHit hit2, 2f, Agent.areaMask))
+                            if (NavMesh.SamplePosition(Colliders[i].transform.position-(Target.position-hit.position).normalized*15, out NavMeshHit hit2, 20f, Agent.areaMask))
                             {
                                 if (!NavMesh.FindClosestEdge(hit2.position, out hit2, Agent.areaMask))
                                 {
@@ -55,9 +84,22 @@ namespace BehaviorTree
 
                                 if (Vector3.Dot(hit2.normal, (Target.position - hit2.position).normalized) < HideSensitivity)
                                 {
-                                Debug.Log("hide hit2");
+                                
+                            if (Vector3.Distance(transform.position, hit2.position) > 1f)
+                            {
+                                transform.GetComponent<Animator>().SetBool("Walking", true);
+                                Debug.Log($"hide hit1:{Vector3.Distance(transform.position, hit2.position)}");
                                 Agent.SetDestination(hit2.position);
-                                state = NodeState.RUNNING;
+                            }
+                            else
+                            {
+                                Debug.Log("stop2");
+                                transform.GetComponent<Animator>().SetBool("Walking", false);
+                                state = NodeState.SUCCESS;
+                                return state;
+                            }
+                            //transform.GetComponent<SmoothAgentMovement>().HandleWaypoint(hit2.position);
+                            state = NodeState.RUNNING;
                                 return state;
 
                                 }
@@ -76,5 +118,22 @@ namespace BehaviorTree
             return state;
 
         }
+        public int SortCollider(Collider A, Collider B)
+        {
+            if (A == null & B != null)
+            {
+                return 1;
+            }
+            else if(A!=null && B==null) {
+                return -1;
+
+            }else if(A==null&& B == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Vector3.Distance(Agent.transform.position, A.transform.position).CompareTo(Vector3.Distance(Agent.transform.position,B.transform.position));
+            }
+        }
     }
-}

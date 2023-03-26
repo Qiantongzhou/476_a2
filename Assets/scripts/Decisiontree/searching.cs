@@ -27,7 +27,7 @@ namespace BehaviorTree
             _animator = transform.GetComponent<Animator>();
             while (true)
             {
-                Vector3 mp = new Vector3(UnityEngine.Random.value * Maze.mazegen.GetLength(0) * 10, 0, UnityEngine.Random.value * Maze.mazegen.GetLength(1) * 10);
+                Vector3 mp = new Vector3(UnityEngine.Random.value * (Maze.mazegen.GetLength(0)-2) * 10, 0, UnityEngine.Random.value * (Maze.mazegen.GetLength(1)-2) * 10);
                 Maze.getXY(mp, out int x, out int y);
 
                 if (Maze.mazegen[x, y] == 0&&x< Maze.mazegen.GetLength(0)&&y<Maze.mazegen.GetLength(1))
@@ -90,7 +90,7 @@ namespace BehaviorTree
                     _setdestination= true;
                     while (true)
                     {
-                        Vector3 mp = new Vector3(UnityEngine.Random.value * Maze.mazegen.GetLength(0) * 10, 0, UnityEngine.Random.value * Maze.mazegen.GetLength(1) * 10);
+                        Vector3 mp = new Vector3((Maze.mazegen.GetLength(0) - 2) * 10, 0, UnityEngine.Random.value * (Maze.mazegen.GetLength(1) - 2) * 10);
                         Maze.getXY(mp, out int x, out int y);
                         if (Maze.mazegen[x, y] == 0)
                         {

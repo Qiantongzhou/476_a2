@@ -18,6 +18,7 @@ public class ChaserAI : Tree
                 new getvisiontarget(transform),
                 new chase(transform)
             }),
+            new gotocoin(transform),
             new searching(transform)
         }) ;
 

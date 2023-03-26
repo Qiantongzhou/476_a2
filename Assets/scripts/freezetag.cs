@@ -1,3 +1,4 @@
+using BehaviorTree;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,13 +42,13 @@ public class freezetag : MonoBehaviour
                 if (!targetfreezed)
                 {
                     print("an evader get freezed");
-                    if (gameObject.GetComponent<AIagent>() != null)
+                    if (gameObject.GetComponent<EvaderAI>() != null)
                     {
-                        gameObject.GetComponent<AIagent>().trackedTarget = null;
+                        gameObject.GetComponent<EvaderAI>().enabled=false;
                     }
                     Gamestat.freeze++;
-                    GameObject.Find("GameEngine").GetComponent<Maze>().Astarsearch.maze.getXY(transform.position, out int p, out int j);
-                    player = new freezedplayer(new Vector3(p * 10, 0, j * 10), false);
+                    Maze.getXY(transform.position, out int p, out int j);
+                    player = new freezedplayer(transform.position, false);
                     Gamestat.freezedplayers.Add(player);
                     targetfreezed = true;
                     if (freezeeffect != null)

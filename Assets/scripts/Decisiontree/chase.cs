@@ -25,12 +25,16 @@ namespace BehaviorTree
                     Debug.Log($"chase {target.name}");
                     _transform.GetComponent<NavMeshAgent>().SetDestination(target.position);
                 }
+                else
+                {
+                    _transform.GetComponent<Animator>().SetBool("Walking", false);
+                }
                 state = NodeState.RUNNING;
                 return state;
             }
             else
             {
-                return NodeState.RUNNING;
+                return NodeState.FAILURE;
             }
            
         }

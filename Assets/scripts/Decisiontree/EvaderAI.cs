@@ -9,20 +9,25 @@ namespace BehaviorTree
         public LayerMask HidableLayers;
         [Range(-1,1)]
         public float Hidesenstivity;
+        public Node root;
 
         protected override Node SetupTree()
         {
-            Node root = new Selector(new List<Node>
+            root = new Selector(new List<Node>
             {
+
                 new Sequence(new List<Node>
                 {
                     new getvisiontarget(transform),
                     new Hide(transform,HidableLayers,Hidesenstivity)
                 }),
-                new searching(transform)
-            });
+                new gotocoin(transform),
+                new searching(transform),
 
+            });
+            
             return root;
         }
+        
     }
 }

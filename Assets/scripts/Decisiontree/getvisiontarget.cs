@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 namespace BehaviorTree
 {
     public class getvisiontarget :Node
@@ -21,6 +23,8 @@ namespace BehaviorTree
             {
                 Debug.Log($"{_transform.name} lose target");
                 ClearData("target");
+                _animator.SetBool("Walking", false);
+                _transform.GetComponent<NavMeshAgent>().SetDestination(_transform.position);
                 yield return new WaitForSeconds(10f);
             }
         }
@@ -34,7 +38,7 @@ namespace BehaviorTree
                 if (targets.Count > 0)
                 {
                     parent.parent.SetData("target", targets[0].transform);
-                    _animator.SetBool("Walking", true);
+                    //_animator.SetBool("Walking", true);
                     Debug.Log($"{_transform.name} get {targets[0].transform}");
                     state = NodeState.SUCCESS;
                     return state;

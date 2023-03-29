@@ -12,7 +12,7 @@ using UnityEngine.AI;
         public Transform transform;
         public float HideSensitivity = 0;
         private Collider[] Colliders = new Collider[10];
-        public float MinEnenydistance = 15f;
+        public float MinEnenydistance = 10f;
         public Transform Player;
 
         public Hide(Transform transform,LayerMask layer,float s)
@@ -31,7 +31,7 @@ using UnityEngine.AI;
             }
             Transform Target = (Transform)GetData("target");
             Player = Target;
-            int hits = Physics.OverlapSphereNonAlloc(Agent.transform.position, transform.GetComponent<Vision>().viewRadius, Colliders, HidableLayers);
+            int hits = Physics.OverlapSphereNonAlloc(Agent.transform.position, transform.GetComponent<Vision>().viewRadius* 1.5f, Colliders, HidableLayers);
             int hitReduction = 0;
             for(int i=0; i< hits; i++)
             {
@@ -45,7 +45,7 @@ using UnityEngine.AI;
             System.Array.Sort(Colliders, SortCollider);
                 for(int i = 0 ; i < hits; i++)
                 {
-                    if (NavMesh.SamplePosition(Colliders[i].transform.position,out NavMeshHit hit, 20f, Agent.areaMask))
+                    if (NavMesh.SamplePosition(Colliders[i].transform.position,out NavMeshHit hit, 15f, Agent.areaMask))
                     {
                         if(!NavMesh.FindClosestEdge(hit.position,out hit,Agent.areaMask))
                         {
@@ -75,7 +75,7 @@ using UnityEngine.AI;
                         }
                         else
                         {
-                            if (NavMesh.SamplePosition(Colliders[i].transform.position-(Target.position-hit.position).normalized*15, out NavMeshHit hit2, 20f, Agent.areaMask))
+                            if (NavMesh.SamplePosition(Colliders[i].transform.position-(Target.position-hit.position).normalized*15, out NavMeshHit hit2, 15f, Agent.areaMask))
                             {
                                 if (!NavMesh.FindClosestEdge(hit2.position, out hit2, Agent.areaMask))
                                 {

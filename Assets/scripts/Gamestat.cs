@@ -16,6 +16,7 @@ public static class Gamestat
     public static int freeze = 0;
     public static int save = 0;
     public static float timetolose = 50;
+    public static int coinstotake = 0;
 }
 public class freezedplayer
 {

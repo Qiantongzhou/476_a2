@@ -186,7 +186,7 @@ public class AstarNode
     }
     public override string ToString()
     {
-        return "<color="+textcolor+">"+x+" "+y+"</color>";
+        return "";//"<color="+textcolor+">"+x+" "+y+"</color>";
         
     }
 }

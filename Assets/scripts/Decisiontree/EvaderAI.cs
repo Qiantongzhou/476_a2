@@ -10,7 +10,8 @@ namespace BehaviorTree
         [Range(-1,1)]
         public float Hidesenstivity;
         public Node root;
-
+        public GameObject freezeboom;
+        public GameObject altert;
         protected override Node SetupTree()
         {
             root = new Selector(new List<Node>
@@ -18,9 +19,11 @@ namespace BehaviorTree
 
                 new Sequence(new List<Node>
                 {
-                    new getvisiontarget(transform),
+                    new getvisiontarget(transform,altert),
+                    new evadervalidatetarget(transform,freezeboom),
                     new Hide(transform,HidableLayers,Hidesenstivity)
                 }),
+                new saveother(transform),
                 new gotocoin(transform),
                 new searching(transform),
 

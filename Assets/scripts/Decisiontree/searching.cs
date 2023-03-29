@@ -19,7 +19,7 @@ namespace BehaviorTree
         private float _waitCounter = 0f;
         private bool _waiting = false;
         private bool _setdestination=false;
-        
+        public int overflowcount = 0;
 
         public searching(Transform transform)
         {
@@ -34,6 +34,12 @@ namespace BehaviorTree
                 {
                     Debug.Log(x + "" + y);
                     _waypoints = new Vector3(x*10, 0, y*10);
+                    break;
+                }
+                overflowcount++;
+                if (overflowcount > 10)
+                {
+                    overflowcount = 0;
                     break;
                 }
             }
@@ -58,7 +64,12 @@ namespace BehaviorTree
                         _waypoints = new Vector3(x * 10, 0, y * 10);
                         break;
                     }
-                    
+                    overflowcount++;
+                    if (overflowcount > 10)
+                    {
+                        overflowcount = 0;
+                        break;
+                    }
                 }
                 Debug.Log($"reset new waypoint{_waypoints}");
 
@@ -76,14 +87,14 @@ namespace BehaviorTree
                 {
                     _setdestination = true;
                     _waiting = false;
-                    _animator.SetBool("Walking", true);
+                    
                 }
             }
             else
             {
                 Vector3 wp = _waypoints;
                 
-                if (Vector3.Distance(_transform.position, wp) < 1f)
+                if (Vector3.Distance(_transform.position, wp) < 0.5f)
                 {
                     _transform.position = wp;
                     _waitCounter = 0f;
@@ -93,6 +104,12 @@ namespace BehaviorTree
                     {
                         Vector3 mp = new Vector3((Maze.mazegen.GetLength(0) - 2) * 10, 0, UnityEngine.Random.value * (Maze.mazegen.GetLength(1) - 2) * 10);
                         Maze.getXY(mp, out int x, out int y);
+                        overflowcount++;
+                        if (overflowcount > 10)
+                        {
+                            overflowcount = 0;
+                            break;
+                        }
                         if (Maze.mazegen[x, y] == 0)
                         {
                             _waypoints = new Vector3(x * 10, 0, y * 10);

@@ -10,7 +10,9 @@ namespace BehaviorTree
         [Range(-1, 1)]
         public float chasesentivity;
         public bool useprediction = true;
-       
+        public GameObject questioning;
+        public GameObject anger;
+        public GameObject alert;
         public Node root;
 
         protected override Node SetupTree()
@@ -19,8 +21,9 @@ namespace BehaviorTree
         {
             new Sequence(new List<Node>
             {
-                new getvisiontarget(transform),
+                new getvisiontarget(transform,alert),
                 //new checkotherchaser(transform,chaseLayers,chasesentivity),
+                new chaservalidatetarget(transform,questioning),
                 new chase(transform,useprediction)
             }),
             new Sequence(new List<Node>
@@ -28,7 +31,7 @@ namespace BehaviorTree
                 new sharedinfo(transform),
                 new chase(transform,useprediction)
             }),
-            new gotocoin(transform),
+            new gotocoinchaser(transform,anger),
             new searching(transform)
         }); 
 

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4100399226913912468}
   - component: {fileID: 8276914378633127120}
   - component: {fileID: 4213659669222585641}
+  - component: {fileID: 2802853137308790223}
   m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
@@ -99,6 +100,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2802853137308790223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3645832267822200242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1001 &7102528473198470929
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110,25 +127,37 @@ PrefabInstance:
       propertyPath: m_Name
       value: mazePlantSphereBig
       objectReference: {fileID: 0}
+    - target: {fileID: 118278, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 125608, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 150748, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.33
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.33
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.33
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.74
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -136,7 +165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.69
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -169,6 +198,10 @@ PrefabInstance:
     - target: {fileID: 423746, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 205401554378332158, guid: b9150a883b2472743b0b36d366b683c8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9150a883b2472743b0b36d366b683c8, type: 3}

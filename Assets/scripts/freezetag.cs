@@ -42,9 +42,9 @@ public class freezetag : MonoBehaviour
                 if (!targetfreezed)
                 {
                     print("an evader get freezed");
-                    if (gameObject.GetComponent<EvaderAI>() != null)
+                    if (gameObject.GetComponent<AImaneger>() != null)
                     {
-                        gameObject.GetComponent<EvaderAI>().enabled=false;
+                        gameObject.GetComponent<AImaneger>().settodisable();
                     }
                     Gamestat.freeze++;
                     Maze.getXY(transform.position, out int p, out int j);
@@ -69,6 +69,10 @@ public class freezetag : MonoBehaviour
                     gameObject.layer = 6;
                     gameObject.tag = "evader";
                     targetfreezed = false;
+                    if (gameObject.GetComponent<AImaneger>() != null)
+                    {
+                        gameObject.GetComponent<AImaneger>().settoevader();
+                    }
                     resettime();
                     countdowntext.SetActive(false);
                 }
@@ -96,11 +100,17 @@ public class freezetag : MonoBehaviour
     {
         gameObject.tag = "chaster";
         gameObject.layer = 7;
-        if(gameObject.GetComponent<AIagent>()!=null)
+        Gamestat.freezedplayers.Remove(player);
+        if (gameObject.GetComponent<AIagent>()!=null)
         {
             gameObject.GetComponent<AIagent>().behaviorType = AIagent.EBehaviorType.Chaster;
             gameObject.GetComponent<AIagent>().targetPosition = Vector3.zero;
             gameObject.GetComponent<visialeffect>().changetochaster();
+        }
+        if (gameObject.GetComponent<AImaneger>() != null)
+        {
+            gameObject.GetComponent<visialeffect>().changetochaster();
+            gameObject.GetComponent<AImaneger>().settochaser();
         }
 
     }

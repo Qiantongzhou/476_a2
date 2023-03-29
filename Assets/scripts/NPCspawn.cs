@@ -33,6 +33,7 @@ public class NPCspawn : MonoBehaviour
                     if (Random.value > 0.5)
                     {
                         Gamestat.coingen = false;
+                        Gamestat.coinstotake += 1;
                         Instantiate(coin, transform.position, Quaternion.identity);
                     }
                 }

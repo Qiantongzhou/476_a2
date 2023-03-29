@@ -8,33 +8,42 @@ namespace BehaviorTree
     public class sharedinfo : Node
     {
         Transform transform;
+        float delay = 0;
         public sharedinfo(Transform t)
         {
             transform = t;
         }
         public override NodeState Evaluate()
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, transform.GetComponent<Vision>().viewRadius * 2);
+            delay+=Time.deltaTime;
+            if (delay > 4f) {
+                delay = 0;
+            }
 
-            if (colliders.Length>0)
+            if (delay == 0)
             {
-                for (int i = 0; i < colliders.Length; i++)
+                Collider[] colliders = Physics.OverlapSphere(transform.position, transform.GetComponent<Vision>().viewRadius * 2);
+
+                if (colliders.Length > 0)
                 {
-                    if (colliders[i].tag == "chaster")
+                    for (int i = 0; i < colliders.Length; i++)
                     {
-                        if (colliders[i] != null)
+                        if (colliders[i].tag == "chaster")
                         {
-                            if (colliders[i].GetComponent<ChaserAI>() != null)
+                            if (colliders[i] != null)
                             {
-                                object t = colliders[i].GetComponent<ChaserAI>().root.GetData("target");
-                                if (t != null)
+                                if (colliders[i].GetComponent<ChaserAI>() != null)
                                 {
-                                    Transform target = (Transform)t;
-                                    parent.parent.SetData("target", target.transform);
-                                    //_animator.SetBool("Walking", true);
-                                    Debug.Log($"{transform.name} get {target.transform}");
-                                    state = NodeState.SUCCESS;
-                                    return state;
+                                    object t = colliders[i].GetComponent<ChaserAI>().root.GetData("target");
+                                    if (t != null)
+                                    {
+                                        Transform target = (Transform)t;
+                                        parent.parent.SetData("target", target.transform);
+                                        //_animator.SetBool("Walking", true);
+                                        Debug.Log($"{transform.name} get {target.transform}");
+                                        state = NodeState.SUCCESS;
+                                        return state;
+                                    }
                                 }
                             }
                         }

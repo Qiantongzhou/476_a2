@@ -45,8 +45,8 @@ public class GenericMaze<TmazeObject>
                
             }
         }
-        Debug.DrawLine(getWorldPosition(0, genericmaze.GetLength(0)+1), getWorldPosition(genericmaze.GetLength(0), genericmaze.GetLength(1)), Color.white, 100f);
-        Debug.DrawLine(getWorldPosition(genericmaze.GetLength(1)-1, 0), getWorldPosition(genericmaze.GetLength(0), genericmaze.GetLength(1)), Color.white, 100f);
+        Debug.DrawLine(getWorldPosition(0, genericmaze.GetLength(1)), getWorldPosition(genericmaze.GetLength(0), genericmaze.GetLength(1)), Color.white, 100f);
+        Debug.DrawLine(getWorldPosition(genericmaze.GetLength(0), 0), getWorldPosition(genericmaze.GetLength(0), genericmaze.GetLength(1)), Color.white, 100f);
         onMazeValueChanged += (object sender, OnMazeValueChangedEventArgs eventArgs) =>
         {
             debugtextarray[eventArgs.x, eventArgs.y].text = genericmaze[eventArgs.x, eventArgs.y]?.ToString();

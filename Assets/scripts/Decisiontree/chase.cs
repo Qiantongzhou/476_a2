@@ -49,6 +49,7 @@ namespace BehaviorTree
                 this.target=target;
                 if (target.tag == "freeze")
                 {
+                    this.target = null;
                     ClearData("target");
                     transform.GetComponent<Animator>().SetBool("Walking", false);
                     state = NodeState.FAILURE;
@@ -73,7 +74,7 @@ namespace BehaviorTree
                     if (!useprediction)
                     {
 
-
+                        transform.GetComponent<Animator>().SetBool("Walking", true);
                         transform.GetComponent<NavMeshAgent>().SetDestination(target.position);
                     }
                     else
@@ -83,7 +84,7 @@ namespace BehaviorTree
                         {
                             timetoplayer=movementprodictiontime;
                         }
-                        Debug.Log("everage: "+AverageVelocity);
+                        //Debug.Log("everage: "+AverageVelocity);
                         Vector3 targetposition = target.position + AverageVelocity * timetoplayer;
                         Collider[] colliders = Physics.OverlapSphere(transform.position, transform.GetComponent<Vision>().viewRadius);
 
@@ -108,6 +109,7 @@ namespace BehaviorTree
                         {
                             targetposition = target.position;
                         }
+                        transform.GetComponent<Animator>().SetBool("Walking", true);
                         transform.GetComponent<NavMeshAgent>().SetDestination(targetposition);
                     }
                 }
@@ -120,6 +122,7 @@ namespace BehaviorTree
             }
             else
             {
+                this.target = null;
                 return NodeState.FAILURE;
             }
            

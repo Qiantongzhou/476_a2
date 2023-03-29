@@ -20,7 +20,7 @@ public class EnemyMovementEditor : Editor
         Hide movement;
         if (ai.root != null)
         {
-             movement = (Hide)ai.root.children[0].children[1];
+             movement = (Hide)ai.root.children[0].children[2];
             getvisiontarget v = (getvisiontarget)ai.root.children[0].children[0];
             if (v.none)
             {
@@ -38,7 +38,7 @@ public class EnemyMovementEditor : Editor
             return;
         }
 
-        int Hits = Physics.OverlapSphereNonAlloc(movement.Agent.transform.position, movement.transform.GetComponent<Vision>().viewRadius, Colliders, movement.HidableLayers);
+        int Hits = Physics.OverlapSphereNonAlloc(movement.Agent.transform.position, movement.transform.GetComponent<Vision>().viewRadius*1.5f, Colliders, movement.HidableLayers);
         if (Hits > 0)
         {
             int HitReduction = 0;
@@ -63,7 +63,7 @@ public class EnemyMovementEditor : Editor
 
             for (int i = 0; i < Hits; i++)
             {
-                if (NavMesh.SamplePosition(Colliders[i].transform.position, out NavMeshHit hit, 20f, movement.Agent.areaMask))
+                if (NavMesh.SamplePosition(Colliders[i].transform.position, out NavMeshHit hit, 15f, movement.Agent.areaMask))
                 {
                     if (!NavMesh.FindClosestEdge(hit.position, out hit, movement.Agent.areaMask))
                     {
@@ -85,7 +85,7 @@ public class EnemyMovementEditor : Editor
                         Handles.SphereHandleCap(GUIUtility.GetControlID(FocusType.Passive), hit.position, Quaternion.identity, 0.25f, EventType.Repaint);
                         Handles.Label(hit.position, $"{i} (hit1) dot: {Vector3.Dot(hit.normal, (movement.Player.position - hit.position).normalized)}");
 
-                        if (NavMesh.SamplePosition(Colliders[i].transform.position - (movement.Player.position - hit.position).normalized * 15, out NavMeshHit hit2, 20f, movement.Agent.areaMask))
+                        if (NavMesh.SamplePosition(Colliders[i].transform.position - (movement.Player.position - hit.position).normalized * 15, out NavMeshHit hit2, 15f, movement.Agent.areaMask))
                         {
                             if (!NavMesh.FindClosestEdge(hit2.position, out hit2, movement.Agent.areaMask))
                             {
@@ -157,12 +157,16 @@ public class EnemyEditor : Editor
         }
         else
         {
-            movement = (chase)x.root.children[0].children[1];
+            movement = (chase)x.root.children[0].children[2];
         }
         
 
         if (movement != null)
         {
+            if (movement.target == null)
+            {
+                return;
+            }
             Debug.Log("gui");
             if (movement.Agent.hasPath)
             {
@@ -196,7 +200,7 @@ public class EnemyEditor : Editor
             Vector3[] corners = movement.Agent.path.corners;
             for (int i = 1; i < corners.Length; i++)
             {
-                Handles.color = Color.cyan;
+                Handles.color = Color.red;
                 Handles.DrawLine(corners[i - 1], corners[i], 3);
             }
         }

@@ -8,6 +8,7 @@ namespace BehaviorTree
     public class gotocoin : Node
     {
         Transform transform;
+        
         public gotocoin(Transform transform)
         {
             this.transform= transform;
@@ -17,7 +18,10 @@ namespace BehaviorTree
             Debug.Log("gotocoin");
             GameObject coin = GameObject.Find("WarningBolt(Clone)");
             if (coin != null) {
+                
+                transform.GetComponent<Animator>().SetBool("Walking", true);
                 transform.GetComponent<NavMeshAgent>().SetDestination(coin.transform.position);
+                
                 state = NodeState.RUNNING;
                 return state;
             }

@@ -106,9 +106,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7715949716122391079}
     m_Modifications:
+    - target: {fileID: 129438, guid: e47b279cdd47e5240801e1670c3398ec, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 154022, guid: e47b279cdd47e5240801e1670c3398ec, type: 3}
       propertyPath: m_Name
       value: mazeCornerLongRoundTall
+      objectReference: {fileID: 0}
+    - target: {fileID: 154022, guid: e47b279cdd47e5240801e1670c3398ec, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 173088, guid: e47b279cdd47e5240801e1670c3398ec, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 448054, guid: e47b279cdd47e5240801e1670c3398ec, type: 3}
       propertyPath: m_RootOrder

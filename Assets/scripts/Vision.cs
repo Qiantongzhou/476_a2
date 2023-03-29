@@ -12,11 +12,15 @@ public class Vision : MonoBehaviour
     public float dynamicangle;
     public LayerMask evaderMask;
     public LayerMask chasterMask;
+    public LayerMask coinmask;
     public LayerMask targetMask;
     public LayerMask obstacleMask;
     [HideInInspector]
     public List<Transform> targets=new List<Transform>();
-   
+
+    [HideInInspector]
+    public List<Transform> coins = new List<Transform>();
+
     private void Start()
     {
         StartCoroutine("FindTargetWithDelay",0.2);
@@ -32,11 +36,11 @@ public class Vision : MonoBehaviour
             
             viewAngle = dynamicangle - dynamicangle / 15 * velocityMagnitude;
         }
-        if (gameObject.tag == "chaster")
+        if (transform.tag == "chaster")
         {
             targetMask = evaderMask;
         }
-        if(gameObject.tag == "evader")
+        if(transform.tag == "evader")
         {
             targetMask = chasterMask;
         }
@@ -48,9 +52,27 @@ public class Vision : MonoBehaviour
         {
             yield return new WaitForSeconds (delay);
             FindVisibleTargets();
+            FindVisiblecoin();
         }
     }
-
+    void FindVisiblecoin()
+    {
+        coins.Clear();
+        Collider[] targetsinVision = Physics.OverlapSphere(transform.position, viewRadius, coinmask);
+        for (int i = 0; i < targetsinVision.Length; i++)
+        {
+            Transform target = targetsinVision[i].transform;
+            Vector3 dirToarget = (target.position - transform.position).normalized;
+            if (Vector3.Angle(transform.forward, dirToarget) < viewAngle / 2)
+            {
+                float dsttotarget = Vector3.Distance(transform.position, target.position);
+                if (!Physics.Raycast(transform.position, dirToarget, dsttotarget, obstacleMask))
+                {
+                    coins.Add(target);
+                }
+            }
+        }
+    }
     void FindVisibleTargets()
     {
         targets.Clear();
